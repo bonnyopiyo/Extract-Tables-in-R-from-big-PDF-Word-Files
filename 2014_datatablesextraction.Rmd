@@ -1,0 +1,66 @@
+---
+title: "2014_2022 data tables"
+author: "Osindi"
+date: "2023-01-12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r }
+require(pacman)
+p_load(docxtractr)
+p_load(dplyr)
+p_load(tidyverse)
+p_load(ggiraph)
+
+# import all the tables
+dhs2014report <- read_docx("fr308.docx") 
+dhs2022report <- read_docx("2022_KDHS Full report.docx")
+
+# number of tables in the report
+docx_tbl_count(dhs2014report)
+docx_tbl_count(dhs2022report)
+tbls_2014 <- docx_extract_all_tbls(dhs2014report, trim = T, guess_header = T)
+tbls2022 <- docx_extract_all_tbls(dhs2022report, trim = T, guess_header = T)
+```
+
+```{r extract fertility tables for both years}
+# Check if the tbls list contains at least 70 tables
+if (length(tbls) >= 70) {
+  # Loop through tables 55 to 70
+  for (i in 55:70) {
+    # Generate a CSV file name based on the table number
+    csv_file <- paste0("table_2014_", i, ".csv")
+    
+    # Write the table to a CSV file
+    write.csv(tbls[[i]], csv_file, row.names = FALSE)
+    
+    # Print a message indicating the table has been saved
+    cat("Table 2014_", i, "has been saved as", csv_file, "\n")
+  }
+} else {
+  cat("Not enough tables in tbls to extract tables 55 to 70.\n")
+}
+
+# Check if the tbls2022 list contains at least 183 tables
+if (length(tbls2022) >= 183) {
+  # Loop through tables 163 to 183
+  for (i in 163:183) {
+    # Generate a CSV file name based on the table number
+    csv_file <- paste0("table_2022_", i, ".csv")
+    
+    # Write the table to a CSV file
+    write.csv(tbls2022[[i]], csv_file, row.names = FALSE)
+    
+    # Print a message indicating the table has been saved
+    cat("Table 2022_", i, "has been saved as", csv_file, "\n")
+  }
+} else {
+  cat("Not enough tables in tbls2022 to extract tables 163 to 183.\n")
+}
+```
+
